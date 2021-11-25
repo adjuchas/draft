@@ -132,6 +132,10 @@ export default {
           this.$message.error('只支持上传zip格式压缩包');
           return false;
         }
+        else if (name.length>15){
+          this.$message.error('文件名不得超过15个字符');
+          return  false;
+        }
        return true
      }
      if (options[0]==='doc'){
