@@ -12,16 +12,24 @@
      ></el-cascader>
      <el-button v-prevent-click style="margin-left: 15px;" type="primary" icon="el-icon-s-data" @click="changeView">筛选</el-button>
      <el-button v-prevent-click style="margin-left: 15px;" @click="getAllinfo" icon="el-icon-refresh" >重置</el-button>
+
      <el-divider></el-divider>
 
      <el-table
          @selection-change="change"
                 class="tableClass"
+                ref='table'
                 :data="allrecodes.slice((currentPage-1)*pagesize,currentPage*pagesize)"
                 max-height="670px" width="80%">
        <el-table-column fixed  type="selection" width="55"></el-table-column>
-       <el-table-column   width="120" label="作品ID" prop="recode_id"></el-table-column>
-       <el-table-column label="提交日期"  sortable width="200" prop="create_time"></el-table-column>
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline  class="table-expand">
+            <el-form-item label="提交日期:"><span>{{props.row.create_time}}</span></el-form-item>
+            <el-form-item label="作品ID:"><span>{{props.row.recode_id}}</span></el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
        <el-table-column width="150" label="学号" sortable prop="stuid"></el-table-column>
        <el-table-column width="200" label="作品名称" prop="upload_name"></el-table-column>
        <el-table-column width="200" label="作品类型" prop="upload_type"></el-table-column>
@@ -35,16 +43,16 @@
            fixed="right"
            label="更改状态"
            width="120">
-         <template slot-scope="scope">
-           <el-select v-model="scope.row.upload_state" size="mini" @change="v=>changeState(v,scope.row.recode_id)" default-first-option>
-             <el-option
-                 v-for="item in  sateSeletions"
-                 :key="item.value"
-                 :label="item.label"
-                 :value="item.value"
-             ></el-option>
-           </el-select>
-         </template>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.upload_state" size="mini" @change="v=>changeState(v,scope.row.recode_id)" default-first-option>
+              <el-option
+                  v-for="item in  sateSeletions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              ></el-option>
+            </el-select>
+          </template>
        </el-table-column>
      </el-table>
 
@@ -76,12 +84,16 @@
 <script>
 import axios from "axios";
 
-
 export default {
   name: "home",
-created() {
-    this.getAllinfo();
+beforeMount() {
+  let token = sessionStorage.getItem("215_token");
+  let uid = localStorage.getItem("215_uid");
+  if (token==null&&uid!=null)
+    this.getToken();
 },
+  mounted(){
+  },
   data(){
     return{
       allrecodes:[],//全部的数据表
@@ -147,16 +159,39 @@ created() {
             }
           ],
       changeStateArrey:[],
+      tableColumnList:[
+        "作品ID",
+        "提交日期",
+        "学号",
+        "作品名称",
+        "作品类型",
+        "审核状态"
+      ],//显示列改变table引用
+      checkedColumnList:[],//显示列处理复选框引用
+      columns:[],
   }
   },
   methods:{
+    getToken(){
+      axios.get('https://csxy-yiban.cn/api/app215/oauth/get_accesstoken/',{
+        params:{uid:localStorage.getItem("215_uid")}
+      }).then(res=>{
+        if (res.data.message==="success"){
+          let token=res.data.access_token;
+          window.sessionStorage.setItem("215_token",token);
+          this.getAllinfo()
+        }
+      })
+    },
     getAllinfo() {
       let that = this;
-        this.filetype = null;
+      this.filetype = null;
+      const token = sessionStorage.getItem("215_token");
+      console.log(token);
         axios.get('https://csxy-yiban.cn/api/app215/admin_215/selectall/', {
-          params: {"access_token":'2889616a72cdef1f3bced725c29be7a5b0710cb0'}
+          params: {access_token:token}
         }).then(res => {
-          console.log(res.data);
+          console.log( res.data);
           that.allrecodes = res.data.recodes;
         })
       },
@@ -165,11 +200,13 @@ created() {
         this.$message.warning("请选择主题")
         return false
       }
-      axios.post('http://120.25.121.177:443/api/admin_215/type_select/',{
-        "access_token":'2889616a72cdef1f3bced725c29be7a5b0710cb0',"select_type":this.filetype
+      axios.post('https://csxy-yiban.cn/api/app215/admin_215/type_select/',{
+        "access_token":sessionStorage.getItem("215_token"),"select_type":this.filetype
       }).then((res)=>{
-        this.allrecodes=res.data.recodes
-      })
+        this.allrecodes=res.data.recodes;
+        console.log(this.allrecodes);
+      }).catch(e=>{
+        console.log(e);})
       },
     change(val){//获取数据表选中行信息
       this.download_recodes=[];
@@ -192,7 +229,7 @@ created() {
         return false;
       }
       axios.post('https://csxy-yiban.cn/api/app215/admin_215/set_state/',{
-        "access_token":'e64467e25e63a28c5ca0ffad3ec9ccfdfc2a198a',
+        "access_token":sessionStorage.getItem("215_token"),
         "set_recode":this.changeStateArrey
       }).then((res)=>{
         if (res.data.message==="success")
@@ -213,9 +250,9 @@ created() {
       }
       else
         axios.post('https://csxy-yiban.cn/api/app215/admin_215/downloads/',{
-          "access_token":'2889616a72cdef1f3bced725c29be7a5b0710cb0',"recodes":this.download_recodes
+          "access_token":sessionStorage.getItem("215_token"),"recodes":this.download_recodes
         }).then((res)=>{
-          window.location.href=res.data.uri
+          window.location.href=res.data.uri;
         })
     },
     handleCurrentChange(e){//改变页数
@@ -224,9 +261,7 @@ created() {
     handleSizeChange(e){//改变页码条目
       this.pagesize=e;
     },
-      test(){
-        this.$refs.filterTable.clearFilter();
-      }
+
   }
 }
 </script>
@@ -235,7 +270,7 @@ created() {
 .el-header {
   border-radius: 10px;
   border: 1px rgba(30, 194, 210, 0.85) solid;
-  background-color: rgba(62, 175, 45, 0.25);
+  /*background-color: rgba(62, 175, 45, 0.25);*/
   color: #333;
   text-align: center;
   line-height: 50px;
@@ -247,4 +282,16 @@ created() {
 .tableClass{
   margin:5px auto;text-align: center;border: lightsteelblue solid 1px;
 }
-</style>
+.table-expand {
+  font-size: 0;
+  height: 40px;
+}
+.tableClass label {
+  width: 90px;
+  color: #99a9bf;
+}
+.table-expand .el-form-item{
+  margin-left: 80px;
+}
+  </style>
+}
