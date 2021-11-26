@@ -66,16 +66,19 @@
          :current-page="this.currentPage"
          :total="allrecodes.length">
      </el-pagination>
-     <el-popconfirm
-         icon="el-icon-info"
-         title="确认保存数据？"
+    <div class="bbuttom">
+      <el-popconfirm
+          icon="el-icon-info"
+          title="确认保存数据？"
           @confirm="saveState"
-     >
-       <el-button style="margin-left: 15px;" type="primary" slot="reference" icon="el-icon-finished" >保存更改</el-button>
+      >
+        <el-button style="margin-left: 15px;" type="primary" slot="reference" icon="el-icon-finished" >保存更改</el-button>
 
-     </el-popconfirm>
-     <el-button v-prevent-click style="margin: 10px" @click="downloads" icon="el-icon-download" >批量下载</el-button>
- </el-main>
+      </el-popconfirm>
+      <el-button v-prevent-click style="margin: 10px" @click="downloads" icon="el-icon-download" >批量下载</el-button>
+      <el-button class="printf" v-prevent-click icon="el-icon-printer"  @click="getResult">打印结果</el-button>
+    </div>
+   </el-main>
 
  </el-container>
 </div>
@@ -91,6 +94,7 @@ beforeMount() {
   let uid = localStorage.getItem("215_uid");
   if (token==null&&uid!=null)
     this.getToken();
+  this.getAllinfo();
 },
   mounted(){
   },
@@ -255,6 +259,15 @@ beforeMount() {
           window.location.href=res.data.uri;
         })
     },
+    getResult(){
+      axios.get('https://csxy-yiban.cn/api/app215/admin_215/state_classify/',{
+        params:{access_token:sessionStorage.getItem("215_token")}
+      }).then(res=>{
+        window.location.href=res.data.uri;
+      }).catch(e=>{
+        this.$message.error("打印失败！");
+        console.log(e);})
+    },
     handleCurrentChange(e){//改变页数
       this.currentPage=e;
     },
@@ -292,6 +305,13 @@ beforeMount() {
 }
 .table-expand .el-form-item{
   margin-left: 80px;
+}
+.bbuttom button{
+
+}
+.printf {
+  float: right;
+  margin: 9px 20px;
 }
   </style>
 }
