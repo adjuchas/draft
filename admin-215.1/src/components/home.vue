@@ -1,8 +1,10 @@
 <template >
 <div>
  <el-container>
+<!--   标题-->
    <el-header >绿洲征文管理系统</el-header>
    <el-main>
+<!--     主题选择器-->
      <el-cascader
          v-model="filetype"
          placeholder="请选择主题"
@@ -14,7 +16,7 @@
      <el-button v-prevent-click style="margin-left: 15px;" @click="getAllinfo" icon="el-icon-refresh" >重置</el-button>
 
      <el-divider></el-divider>
-
+<!--     数据表格-->
      <el-table
          @selection-change="change"
                 class="tableClass"
@@ -22,6 +24,7 @@
                 :data="allrecodes.slice((currentPage-1)*pagesize,currentPage*pagesize)"
                 max-height="670px" width="80%">
        <el-table-column fixed  type="selection" width="55"></el-table-column>
+<!--       折叠部分-->
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline  class="table-expand">
@@ -33,6 +36,7 @@
        <el-table-column width="150" label="学号" sortable prop="stuid"></el-table-column>
        <el-table-column width="200" label="作品名称" prop="upload_name"></el-table-column>
        <el-table-column width="200" label="作品类型" prop="upload_type"></el-table-column>
+<!--       审核状态筛选-->
        <el-table-column width="120" label="审核状态" align="center" prop="upload_state"
                         :filter-method="filterTag"
                         :filter-multiple="false"
@@ -43,6 +47,7 @@
            fixed="right"
            label="更改状态"
            width="120">
+<!--         改变审核状态选择器-->
           <template slot-scope="scope">
             <el-select v-model="scope.row.upload_state" size="mini" @change="v=>changeState(v,scope.row.recode_id)" default-first-option>
               <el-option
@@ -55,7 +60,7 @@
           </template>
        </el-table-column>
      </el-table>
-
+<!--表格分页-->
      <el-pagination
          style="text-align: center"
          @current-change="handleCurrentChange"
@@ -67,10 +72,13 @@
          :total="allrecodes.length">
      </el-pagination>
     <div class="bbuttom">
+
+<!--      保存确认框-->
       <el-popconfirm
           icon="el-icon-info"
           title="确认保存数据？"
           @confirm="saveState"
+          @cancel="getAllinfo"
       >
         <el-button style="margin-left: 15px;" type="primary" slot="reference" icon="el-icon-finished" >保存更改</el-button>
 
@@ -91,23 +99,33 @@ export default {
   name: "home",
 beforeMount() {
   let token = sessionStorage.getItem("215_token");
+  // uid由学生端生成，易班授权通过后，后端判断管理员身份进行重定向到管理页面
   let uid = localStorage.getItem("215_uid");
   if (token==null&&uid!=null)
     this.getToken();
+  //解决刷新不显示数据问题
   this.getAllinfo();
 },
   mounted(){
   },
   data(){
     return{
-      allrecodes:[],//全部的数据表
-      pagesize:10,//条目数量
-      currentPage:1,//当前页
-      props:{multiple:true},//选择器多选
-      filetype:[],//筛选返回的结果
-      selectValue:[],//审核状态返回结果
-      download_recodes:[],//批量下载数组
-      themeData:[//主题筛选
+      //全部的数据表
+      allrecodes:[],
+      //条目数量
+      pagesize:10,
+      //当前页
+      currentPage:1,
+      //选择器多选
+      props:{multiple:true},
+      //筛选返回的结果
+      filetype:[],
+      //审核状态返回结果
+      selectValue:[],
+      //批量下载数组
+      download_recodes:[],
+      //主题筛选
+      themeData:[
         {
           value:"doc",
           label:'文本文档',
@@ -145,7 +163,8 @@ beforeMount() {
           ]
         }
         ],
-          sateSeletions:[//审核状态
+      //审核状态
+          sateSeletions:[
             {
               value:"审核不通过",
               label:"审核不通过"
@@ -162,20 +181,12 @@ beforeMount() {
               label: '待审核'
             }
           ],
-      changeStateArrey:[],
-      tableColumnList:[
-        "作品ID",
-        "提交日期",
-        "学号",
-        "作品名称",
-        "作品类型",
-        "审核状态"
-      ],//显示列改变table引用
-      checkedColumnList:[],//显示列处理复选框引用
-      columns:[],
+      //改变状态时暂存数组
+      changeStateArray:[]
   }
   },
   methods:{
+    //获取密钥
     getToken(){
       axios.get('https://csxy-yiban.cn/api/app215/oauth/get_accesstoken/',{
         params:{uid:localStorage.getItem("215_uid")}
@@ -183,23 +194,24 @@ beforeMount() {
         if (res.data.message==="success"){
           let token=res.data.access_token;
           window.sessionStorage.setItem("215_token",token);
+          //获取信息异步问题！
           this.getAllinfo()
         }
       })
     },
+    //获取全局数据，重置数据
     getAllinfo() {
       let that = this;
       this.filetype = null;
       const token = sessionStorage.getItem("215_token");
-      console.log(token);
         axios.get('https://csxy-yiban.cn/api/app215/admin_215/selectall/', {
           params: {access_token:token}
         }).then(res => {
-          console.log( res.data);
           that.allrecodes = res.data.recodes;
         })
       },
-    changeView() {//筛选数据用
+    //筛选数据
+    changeView() {
       if (this.filetype==null){
         this.$message.warning("请选择主题")
         return false
@@ -208,45 +220,46 @@ beforeMount() {
         "access_token":sessionStorage.getItem("215_token"),"select_type":this.filetype
       }).then((res)=>{
         this.allrecodes=res.data.recodes;
-        console.log(this.allrecodes);
       }).catch(e=>{
         console.log(e);})
       },
-    change(val){//获取数据表选中行信息
+    //获取数据表选中行信息
+    change(val){
       this.download_recodes=[];
       for (let i in val){
         this.download_recodes[i]=val[i].recode_id;
       }
     },
-    filterTag(value,row){//页码条目
+    //页码条目
+    filterTag(value,row){
       return row.upload_state===value
     },
-    changeState(e,a){//改变状态的记录
+    //改变状态的记录
+    changeState(e,a){
       let temp={};
       temp[a]=e;
-      this.changeStateArrey.push(temp);
-      console.log(this.changeStateArrey);
+      this.changeStateArray.push(temp);
+
     },
-    saveState(){//提交状态
-      if (this.changeStateArrey.length<1){
+    //提交状态
+    saveState(){
+      if (this.changeStateArray.length<1){
         this.$message.warning("从未改变过文件审核状态");
         return false;
       }
       axios.post('https://csxy-yiban.cn/api/app215/admin_215/set_state/',{
         "access_token":sessionStorage.getItem("215_token"),
-        "set_recode":this.changeStateArrey
+        "set_recode":this.changeStateArray
       }).then((res)=>{
         if (res.data.message==="success")
           this.$message.success("保存成功")
-        {
-          console.log(res.data.message);
-        }
       }).catch(e=>{
         console.log(e);
         this.$message.error("服务器内部错误")
       })
     },
-    downloads(){//批量下载
+    //批量下载
+    downloads(){
       let d =this.download_recodes;
       if (d.length<1){//判断有无选择
         this.$message.warning('未选择文件');
@@ -259,6 +272,7 @@ beforeMount() {
           window.location.href=res.data.uri;
         })
     },
+    //打印结果
     getResult(){
       axios.get('https://csxy-yiban.cn/api/app215/admin_215/state_classify/',{
         params:{access_token:sessionStorage.getItem("215_token")}
@@ -268,10 +282,12 @@ beforeMount() {
         this.$message.error("打印失败！");
         console.log(e);})
     },
-    handleCurrentChange(e){//改变页数
+    //改变页数
+    handleCurrentChange(e){
       this.currentPage=e;
     },
-    handleSizeChange(e){//改变页码条目
+    //改变页码条目
+    handleSizeChange(e){
       this.pagesize=e;
     },
 
