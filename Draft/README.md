@@ -163,7 +163,7 @@
     "all_recode": [
          {
             "stuid": "202035020128",
-            "recode_id": xxx,
+            "recode_id": 1,
             "upload_name": "xxxxx.docx",
             "upload_type": "青春风采,诗歌作品",
             "upload_state": "待审核",
