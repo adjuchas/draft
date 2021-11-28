@@ -160,7 +160,16 @@
 ```JSON
 {
     "message": "success",
-    "all_recode": []
+    "all_recode": [
+         {
+            "stuid": "202035020128",
+            "recode_id": xxx,
+            "upload_name": "xxxxx.docx",
+            "upload_type": "青春风采,诗歌作品",
+            "upload_state": "待审核",
+            "create_time": "2021-11-23 14:46:29"
+        }
+    ]
 }
 ```
 
