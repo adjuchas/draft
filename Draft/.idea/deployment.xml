@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="技术部aliyun" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="技术部aliyun">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/yiban/api/215/Draft" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
