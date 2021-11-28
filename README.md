@@ -9,4 +9,5 @@
 >- 参与人员：马祖贤、姚永康
 >- 启动日期：2021.10
 
-详细文档（暂无）
+详细文档
+https://github.com/csxyyiban/Oasis-draft-platform/blob/main/Draft/README.md
