@@ -35,11 +35,16 @@
 
 ##### stu_info： 
 
-| 序号 | 名称 | 数据类型 | 长度 | 允许空值 | 主键 | 说明 |
-| ---- | ---- | -------- | ---- | -------- | ---- | ---- |
-| 1 |      |          |      |          |      |      |
-| 2 |      |          |      |          |      |      |
-| 3 |      |          |      |          |      |      |
+| 序号 | 名称 | 数据类型 | 允许空值 | 主键 | 说明 |
+| ---- | ---- | -------- | -------- | ---- | ---- |
+| 1 | yb_stuid | varchar(12) | N | PK | 学生学号 |
+| 2 | yb_realname | varchar(10) | N |  | 学生姓名 |
+| 3 | yb_id | int | N |  | 易班id |
+| 4 | create_time | datetime(6) | N |  | 首次登入时间 |
+| 5 | yb_classname | varchar(20) | Y |  | 学生班级信息 |
+| 6 | yb_collegename | varchar(15) | Y | | 学生二级学院信息 |
+
+
 
 ##### 数据表2：
 
@@ -231,17 +236,17 @@
     "message": "success",
     "recodes": [
         {
-            "stuid": "201935030150",
-            "recode_id": 110,
-            "upload_name": "诗歌献给党.docx",
+            "stuid": "202035020128",
+            "recode_id": xxx,
+            "upload_name": "xxxxx.docx",
             "upload_type": "时代印记,诗歌作品",
             "upload_state": "待审核",
             "create_time": "2021-11-23 14:25:04"
         },
         {
-            "stuid": "201935120133",
-            "recode_id": 111,
-            "upload_name": "我的大学.docx",
+            "stuid": "202035020128",
+            "recode_id": xxx,
+            "upload_name": "xxxxx.docx",
             "upload_type": "青春风采,诗歌作品",
             "upload_state": "待审核",
             "create_time": "2021-11-23 14:46:29"
@@ -267,7 +272,7 @@
 
 ```JSON
 {
-    "access_token": "c10d92d219747cf44912fc6bd6362a6894bd198e",
+    "access_token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "select_type": [
         ["doc", 1], 
         ["doc", 2], 
@@ -283,25 +288,25 @@
     "message": "success",
     "recodes": [
         {
-            "stuid": "201930010129",
-            "recode_id": 113,
-            "upload_name": "生在党旗下.docx",
+            "stuid": "202035020128",
+            "recode_id": xxx,
+            "upload_name": "xxxxx.docx",
             "upload_type": "中国故事,诗歌作品",
             "upload_state": "待审核",
             "create_time": "2021-11-23T14:49:23"
         },
         {
-            "stuid": "202140070103",
-            "recode_id": 115,
-            "upload_name": "传承红色基因，担当复兴使命.docx",
+            "stuid": "202035020128",
+            "recode_id": xxx,
+            "upload_name": "xxxxx.docx",
             "upload_type": "中国故事,诗歌作品",
             "upload_state": "待审核",
             "create_time": "2021-11-23T16:08:33"
         },      
         {
-            "stuid": "202140070110",
-            "recode_id": 128,
-            "upload_name": "百年风华正茂.docx",
+            "stuid": "202035020128",
+            "recode_id": xxx,
+            "upload_name": "xxxxx.docx",
             "upload_type": "中国故事,诗歌作品",
             "upload_state": "待审核",
             "create_time": "2021-11-23T20:43:21"
