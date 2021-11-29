@@ -163,7 +163,7 @@
     "all_recode": [
          {
             "stuid": "202035020128",
-            "recode_id": xxx,
+            "recode_id": 1,
             "upload_name": "xxxxx.docx",
             "upload_type": "青春风采,诗歌作品",
             "upload_state": "待审核",
@@ -259,7 +259,7 @@
     "recodes": [
         {
             "stuid": "202035020128",
-            "recode_id": xxx,
+            "recode_id": 1,
             "upload_name": "xxxxx.docx",
             "upload_type": "时代印记,诗歌作品",
             "upload_state": "待审核",
@@ -267,7 +267,7 @@
         },
         {
             "stuid": "202035020128",
-            "recode_id": xxx,
+            "recode_id": 2,
             "upload_name": "xxxxx.docx",
             "upload_type": "青春风采,诗歌作品",
             "upload_state": "待审核",
@@ -311,7 +311,7 @@
     "recodes": [
         {
             "stuid": "202035020128",
-            "recode_id": xxx,
+            "recode_id": 1,
             "upload_name": "xxxxx.docx",
             "upload_type": "中国故事,诗歌作品",
             "upload_state": "待审核",
@@ -319,7 +319,7 @@
         },
         {
             "stuid": "202035020128",
-            "recode_id": xxx,
+            "recode_id": 2,
             "upload_name": "xxxxx.docx",
             "upload_type": "中国故事,诗歌作品",
             "upload_state": "待审核",
@@ -327,7 +327,7 @@
         },      
         {
             "stuid": "202035020128",
-            "recode_id": xxx,
+            "recode_id": 3,
             "upload_name": "xxxxx.docx",
             "upload_type": "中国故事,诗歌作品",
             "upload_state": "待审核",
