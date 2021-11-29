@@ -50,15 +50,14 @@
     <el-table @selection-change="change"
               ref="Stable"
               show-header
-              style="margin:  auto;width: 670px;"
+              style="margin:  auto;width: 690px;"
               :data="filelog"
     >
       <el-table-column   type="selection" width="55"></el-table-column>
-      <el-table-column  fixed label="作品名称" width="200" prop="upload_name" ></el-table-column>
+      <el-table-column  fixed label="作品名称" width="150" prop="upload_name" ></el-table-column>
       <el-table-column  prop="create_time" label="日期" width="150"></el-table-column>
       <el-table-column  label="作品主题" width="200" prop="upload_type"></el-table-column>
       <el-table-column prop="upload_state" label="审核状态" width="120"></el-table-column>
-      <el-table-column  prop="recode_id" label="作品ID" width="120"></el-table-column>
     </el-table>
     <el-button style="margin: 30px 0 30px;"  icon="el-icon-download" v-prevent-click @click="downloads">批量下载</el-button>
     </div>
@@ -127,13 +126,14 @@ export default {
         return false;
       }
       if(options[0]==='zip') {
+        const name=file.name.replace(/.zip/,"");
         const iszip = file.name.endsWith('.zip')
         if (!iszip) {
           this.$message.error('只支持上传zip格式压缩包');
           return false;
         }
         else if (name.length>15){
-          this.$message.error('文件名不得超过15个字符');
+          this.$message.error('文件名长度不能超过15个字符');
           return  false;
         }
        return true
@@ -146,7 +146,7 @@ export default {
         return false;
       }
       else if (name.length>15){
-        this.$message.error('文档文件名过长');
+        this.$message.error('文件名长度不能超过15个字符');
         return  false;
       }
      return true;
@@ -165,11 +165,12 @@ export default {
     },
       change(val){//表格选择
         this.recodes=[];
-        for (let i in val){
-          this.recodes[i]=val[i].recode_id;//通过作品ID批量下载文件
-        }
+        val.forEach(i=>{
+         this.recodes.push(i.recode_id);
+       })
       },
     downloads(){//批量下载
+
       if(this.recodes.length<1){
         this.$message.warning("请在提交记录中选择文件")
         return false
