@@ -101,9 +101,13 @@ beforeMount() {
   let token = sessionStorage.getItem("215_token");
   // uid由学生端生成，易班授权通过后，后端判断管理员身份进行重定向到管理页面
   let uid = localStorage.getItem("215_uid");
+  if (uid == null){
+    window.location.href = "https://csxy-yiban.cn/pages/215/";
+  }
   if (token==null&&uid!=null)
     this.getToken();
   //解决刷新不显示数据问题
+ else
   this.getAllinfo();
 },
   mounted(){
