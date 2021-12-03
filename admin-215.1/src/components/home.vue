@@ -256,7 +256,11 @@ beforeMount() {
         "set_recode":this.changeStateArray
       }).then((res)=>{
         if (res.data.message==="success")
-          this.$message.success("保存成功")
+        {
+          //成功清空状态数组
+          this.$message.success("保存成功");
+          this.changeStateArray=[];
+        }
       }).catch(e=>{
         console.log(e);
         this.$message.error("服务器内部错误")
