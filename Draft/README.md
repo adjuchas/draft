@@ -8,7 +8,7 @@
 
 ### 前端技术
 
-* Vue3.x
+* Vue2.x
 * Element-ui
 * axios
 
